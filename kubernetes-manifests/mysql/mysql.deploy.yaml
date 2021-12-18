@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mini-db
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      nodeSelector:
+        node: default
+      containers:
+        - image: mysql:5.7.27
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "1111"
+          ports:
+            - containerPort: 3306
+              name: mysql

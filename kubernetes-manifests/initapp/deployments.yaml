@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-server
+  labels:
+    app: init-server
+spec:
+  strategy:
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: init-server
+  template:
+    metadata:
+      labels:
+        app: init-server
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+      nodeSelector:
+        node: default
+      containers:
+        - name: initapp
+          image: abda3840/minikubeapp:0.0.1
+          ports:
+            - containerPort: 8081
+              name: http
