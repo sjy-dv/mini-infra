@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: rabbitmq
+data:
+  rabbitmq.conf: |
+    # DEFAULT CONFIGURATION
+    loopback_users.guest = false
+    listeners.tcp.default = 5672
+    management.tcp.port = 15672
+
+    # USER
+    default_user = root
+    default_pass = 1111
+
+    default_permissions.configure = .*
+    default_permissions.read = .*
+    default_permissions.write = .*
+
+    default_user_tags.administrator = true
+
+    # MEMEORY
+    disk_free_limit.relative = 1.0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: rabbitmq
+  labels:
+    app: rabbitmq
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      hostname: rabbitmq
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+      nodeSelector:
+        node: default
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.8-management
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: http
+            - containerPort: 4369
+              name: epmd
+# volumes:
+#   - name: config-volume
+#     confingMap:
+#       name: rabbitmq-config
+#       items:
+#         - key: rabbitmq.conf
+#           path: rabbitmq.conf
+#         - key: enabled_plugins
+#           path: enabled_plugins
