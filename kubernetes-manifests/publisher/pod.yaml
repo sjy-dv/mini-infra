@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: publisher
+  labels:
+    app: publisher
+spec:
+  nodeSelector:
+    node: default
+  restartPolicy: Always
+  containers:
+    - name: publisher
+      image: abda3840/publisher:0.0.4
+      imagePullPolicy: IfNotPresent

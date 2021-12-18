@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: consumer
+  labels:
+    app: consumer
+spec:
+  nodeSelector:
+    node: default
+  restartPolicy: Always
+  containers:
+    - name: consumer
+      image: abda3840/consumer:0.0.4
+      imagePullPolicy: IfNotPresent
